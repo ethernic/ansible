@@ -1,0 +1,6 @@
+- name: Reboot the server and wait for it to come back up.
+  reboot:
+  become: true 
+  when:
+    - reboot_required.stat.exists
+    - reboot

@@ -1,0 +1,15 @@
+- name: Apt upgrade 
+  include_tasks:
+    file: apt-upgrade.yml
+  when: apt_upgrade
+
+- name: Check reboot
+  include_tasks:
+    file: check-reboot.yml
+  when: check_reboot
+
+- name: Reboot
+  include_tasks: 
+    file: reboot.yml
+  when: reboot
+  

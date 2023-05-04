@@ -1,0 +1,30 @@
+---
+
+- name: Update all installed packages using APT module
+  ansible.builtin.apt:
+    name: "*"
+    cache_valid_time: 3600
+    state: latest
+    update_cache: yes
+  register: apt_update_status
+  become: yes
+
+## Output all pckage names instead of counts
+# - name: List installed and updated packages
+#   shell: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log |cut -d " " -f 3-5
+#   register: result
+#   when: apt_update_status
+
+- name: Count installed/upgraded
+  shell: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log | awk '{print $3}' | sort | uniq -c | sort -rn
+  register: result2
+  when: apt_update_status
+
+- name: Show updates
+  debug: msg="{{result2.stdout_lines}}"
+  when: apt_update_status
+
+- name: Remove packages not needed anymore
+  ansible.builtin.apt:
+    autoremove: yes
+  become: yes

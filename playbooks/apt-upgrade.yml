@@ -1,0 +1,4 @@
+- name: Apt upgrade playbook
+  hosts: debian:ubuntu
+  roles: 
+    - apt-upgrade
